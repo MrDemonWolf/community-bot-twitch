@@ -6,6 +6,7 @@ module.exports = async (client) => {
   try {
     client.user.setActivity(process.env.DISCORD_ACTIVITY, {
       type: ActivityType[process.env.DISCORD_ACTIVITY_TYPE],
+      url: process.env.DISCORD_ACTIVITY_URL,
     });
     consola.success({
       message: 'Discord has been activity set',

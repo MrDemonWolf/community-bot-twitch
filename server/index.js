@@ -8,9 +8,6 @@ const discordClient = require('./discord');
  */
 require('dotenv').config();
 
-const discord = require('./discord');
-const discordActivity = require('./discord/activity');
-
 /**
  * Connect to MongoDB.
  */
@@ -34,7 +31,7 @@ db.once('open', () => {
 });
 
 discordClient
-  .login(process.env.DISCORD_TOKEN)
+  .login(`Bot ${process.env.DISCORD_TOKEN}`)
   .then(() => {
     consola.success({
       message: 'Discord connected',
@@ -51,11 +48,33 @@ discordClient
 /**
  * Cloes connection to mongodb on exit.
  */
-process.on('SIGINT', () => {
-  mongoose.connection.close(() => {
-    consola.success(
-      'Mongoose connection is disconnected due to application termination'
-    );
-    process.exit(0);
-  });
+process.on('SIGINT', async () => {
+  // disconnect from discord
+  try {
+    discordClient.destroy();
+    consola.success({
+      message: 'Discord disconnected',
+      badge: true,
+    });
+  } catch (err) {
+    consola.error({
+      message: `Error disconnecting from discord: ${err}`,
+      badge: true,
+    });
+  }
+
+  // disconnect from mongodb
+
+  try {
+    await mongoose.disconnect();
+    consola.success({
+      message: 'MongoDB disconnected',
+      badge: true,
+    });
+  } catch (err) {
+    consola.error({
+      message: `Error disconnecting from mongodb: ${err}`,
+      badge: true,
+    });
+  }
 });

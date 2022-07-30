@@ -4,7 +4,13 @@
   "description": "A simple community bot for DemonWolfDev community which is owned by MrDemonWolf, Inc. (Server)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon",
+    "lint": "eslint . --ext .js --fix",
+    "format": "prettier-eslint --write $PWD/'**/*.{js,json}'",
+    "discord:commands:deploy": "node ./utils/discord/deploy-commands.js",
+    "discord:commands:cleanup": "node ./utils/discord/cleanup-commands.js",
+    "test": "cross-env NODE_ENV=test mocha tests --exit"
   },
   "author": "MrDemonWolf, Inc",
   "license": "MIT",
