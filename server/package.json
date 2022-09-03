@@ -8,8 +8,8 @@
     "dev": "nodemon",
     "lint": "eslint . --ext .js --fix",
     "format": "prettier-eslint --write $PWD/'**/*.{js,json}'",
-    "discord:commands:deploy": "node ./utils/discord/deploy-commands.js",
-    "discord:commands:cleanup": "node ./utils/discord/cleanup-commands.js",
+    "discord:commands:deploy": "node ./utils/discord/commands/deploy.js",
+    "discord:commands:cleanup": "node ./utils/discord/commands/clean.js",
     "test": "cross-env NODE_ENV=test mocha tests --exit"
   },
   "author": "MrDemonWolf, Inc",
