@@ -12,4 +12,4 @@ Want to contribute? Check out our [Code of Conduct]() and [Contributing]() docs.
 
 ## License
 
-![GitHub license](https://img.shields.io/github/license/DemonWolfDev/community-bot.svg?style=for-the-badge&logo=github)
+![GitHub license](https://img.shields.io/github/license/MrDemonWolf/community-bot.svg?style=for-the-badge&logo=github)
