@@ -2,6 +2,7 @@ const consola = require('consola');
 const mongoose = require('mongoose');
 
 const discordClient = require('./discord');
+const twitchClient = require('./twitch');
 
 /**
  * Load environment variables from the .env file, where API keys and passwords are stored.
@@ -45,6 +46,8 @@ discordClient
     });
   });
 
+/** Connect to Twitch */
+twitchClient.connect();
 /**
  * Cloes connection to mongodb on exit.
  */
