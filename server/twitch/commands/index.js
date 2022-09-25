@@ -1,3 +1,4 @@
+const consola = require('consola');
 const ping = require('./ping');
 
 module.exports = async (client, channel, tags, message, self) => {

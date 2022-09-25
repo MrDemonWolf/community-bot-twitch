@@ -1,9 +1,9 @@
 const consola = require('consola');
 
-/**
- * Load commands from the ./commands directory.
- */
 const ping = require('./ping');
+const bot = require('./bot');
+const server = require('./server');
+const user = require('./user');
 
 module.exports = (client) => {
   try {
@@ -15,6 +15,15 @@ module.exports = (client) => {
       switch (commandName) {
         case 'ping':
           await ping(client, interaction);
+          break;
+        case 'server':
+          await server(client, interaction);
+          break;
+        case 'user':
+          await user(client, interaction);
+          break;
+        case 'bot':
+          await bot(client, interaction);
           break;
         default:
           consola.warn({

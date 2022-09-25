@@ -1,7 +1,7 @@
 {
   "name": "community-bot-server",
   "version": "1.0.0",
-  "description": "A simple community bot for DemonWolfDev community which is owned by MrDemonWolf, Inc. (Server)",
+  "description": "A simple community bot for MrDemonWolf, Inc Discord Server and Twitch Community Chat",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
