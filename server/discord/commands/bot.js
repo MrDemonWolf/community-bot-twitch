@@ -13,35 +13,35 @@ module.exports = async (client, interaction) => {
 
     const { username, id, avatar } = client.user;
 
-    const totalMembers = guild.members.cache.size;
+    const totalMembers = guild.members.cache.size.toString();
 
-    const totalBots = guild.members.cache.filter(
-      (member) => member.user.bot
-    ).size;
+    const totalBots = guild.members.cache
+      .filter((member) => member.user.bot)
+      .size.toString();
 
-    const totalHumans = totalMembers - totalBots;
+    const totalHumans = totalMembers - totalBots.toString();
 
-    const totalChannels = guild.channels.cache.size;
+    const totalChannels = guild.channels.cache.size.toString();
 
-    const totalTextChannels = guild.channels.cache.filter(
-      (channel) => channel.type === 'GUILD_TEXT'
-    ).size;
+    const totalTextChannels = guild.channels.cache
+      .filter((channel) => channel.type === 'GUILD_TEXT')
+      .size.toString();
 
-    const totalVoiceChannels = guild.channels.cache.filter(
-      (channel) => channel.type === 'GUILD_VOICE'
-    ).size;
+    const totalVoiceChannels = guild.channels.cache
+      .filter((channel) => channel.type === 'GUILD_VOICE')
+      .size.toString();
 
-    const totalCategories = guild.channels.cache.filter(
-      (channel) => channel.type === 'GUILD_CATEGORY'
-    ).size;
+    const totalCategories = guild.channels.cache
+      .filter((channel) => channel.type === 'GUILD_CATEGORY')
+      .size.toString();
 
-    const totalRoles = guild.roles.cache.size;
+    const totalRoles = guild.roles.cache.size.toString();
 
     // uptime in discord fancy format
     const style = 'R';
     const uptime = `<t:${Math.floor(client.readyAt / 1000)}${
       style ? `:${style}` : ''
-    }>`;
+    }>`.toString();
 
     const embed = new EmbedBuilder()
       .setColor('#0099ff')
@@ -57,47 +57,47 @@ module.exports = async (client, interaction) => {
       .addFields(
         {
           name: 'Uptime',
-          value: uptime.toString(),
+          value: uptime,
           inline: true,
         },
         {
           name: 'Total Members',
-          value: totalMembers.toString(),
+          value: totalMembers,
           inline: true,
         },
         {
           name: 'Total Bots',
-          value: totalBots.toString(),
+          value: totalBots,
           inline: true,
         },
         {
           name: 'Total Humans',
-          value: totalHumans.toString(),
+          value: totalHumans,
           inline: true,
         },
         {
           name: 'Total Channels',
-          value: totalChannels.toString(),
+          value: totalChannels,
           inline: true,
         },
         {
           name: 'Total Text Channels',
-          value: totalTextChannels.toString(),
+          value: totalTextChannels,
           inline: true,
         },
         {
           name: 'Total Voice Channels',
-          value: totalVoiceChannels.toString(),
+          value: totalVoiceChannels,
           inline: true,
         },
         {
           name: 'Total Categories',
-          value: totalCategories.toString(),
+          value: totalCategories,
           inline: true,
         },
         {
           name: 'Total Roles',
-          value: totalRoles.toString(),
+          value: totalRoles,
           inline: true,
         }
       )
@@ -105,7 +105,9 @@ module.exports = async (client, interaction) => {
         text: `Requested by ${interaction.user.username}#${interaction.user.discriminator}`,
       });
 
-    // repoly to interaction channel
+    consola.success({
+      message: `* Successfully executed info command from ${interaction.user.username} (${interaction.user.id})`,
+    });
 
     await interaction.reply({
       embeds: [embed],

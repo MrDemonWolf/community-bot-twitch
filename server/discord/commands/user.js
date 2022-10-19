@@ -20,21 +20,14 @@ module.exports = async (client, interaction) => {
     const style = 'R';
     const createdAtFormatted = `<t:${Math.floor(createdAt / 1000)}${
       style ? `:${style}` : ''
-    }>`;
-
-    // uptime in discord fancy format
-    const uptime = `<t:${Math.floor(client.readyAt / 1000)}${
-      style ? `:${style}` : ''
-    }>`;
+    }>`.toString();
 
     // user roles
     const roles = guild.members.cache
       .get(interaction.user.id)
       .roles.cache.map((role) => role.name)
-      .join(', ');
-
-    // user status
-    const { status } = interaction.user.presence;
+      .join(', ')
+      .toString();
 
     const embed = new EmbedBuilder()
       .setColor('#0099ff')
@@ -48,22 +41,12 @@ module.exports = async (client, interaction) => {
         },
         {
           name: 'Created At',
-          value: createdAtFormatted.toString(),
-          inline: true,
-        },
-        {
-          name: 'Bot Uptime',
-          value: uptime.toString(),
-          inline: true,
-        },
-        {
-          name: 'Status',
-          value: status.toString(),
+          value: createdAtFormatted,
           inline: true,
         },
         {
           name: 'Roles',
-          value: roles.toString(),
+          value: roles,
           inline: false,
         }
       )
@@ -71,6 +54,10 @@ module.exports = async (client, interaction) => {
       .setFooter({
         text: `Requested by ${interaction.user.username}#${interaction.user.discriminator}`,
       });
+
+    consola.success({
+      message: `* Successfully executed user command from ${interaction.user.username} (${interaction.user.id})`,
+    });
 
     await interaction.reply({
       embeds: [embed],

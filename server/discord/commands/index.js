@@ -1,9 +1,9 @@
 const consola = require('consola');
 
-const ping = require('./ping');
 const bot = require('./bot');
 const server = require('./server');
 const user = require('./user');
+const rules = require('./rules');
 
 module.exports = (client) => {
   try {
@@ -13,9 +13,6 @@ module.exports = (client) => {
       const { commandName } = interaction;
 
       switch (commandName) {
-        case 'ping':
-          await ping(client, interaction);
-          break;
         case 'server':
           await server(client, interaction);
           break;
@@ -25,6 +22,10 @@ module.exports = (client) => {
         case 'bot':
           await bot(client, interaction);
           break;
+        case 'rules':
+          await rules(client, interaction);
+          break;
+
         default:
           consola.warn({
             message: `Unknown command: ${commandName}`,
