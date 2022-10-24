@@ -1,13 +1,19 @@
 const consola = require('consola');
 
 const DiscordGuild = require('../../../../modals/DiscordGuild');
+const {
+  info,
+  success,
+  error,
+} = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
-    consola.info({
-      message: `* Executed rules deploy link command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    info(
+      'rules deploy unlink command',
+      interaction.user.username,
+      interaction.user.id
+    );
 
     const channelId = interaction.options.getChannel('channel').id;
 
@@ -30,18 +36,16 @@ module.exports = async (client, interaction) => {
       ephemeral: true,
     });
 
-    consola.success({
-      message: `* Successfully linked rules to <#${channelId}> received from ${interaction.user.username} (${interaction.user.id})`,
-    });
-
-    consola.success({
-      message: `* Successfully executed rules deploy link command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    success(
+      'rules deploy unlink command',
+      interaction.user.username,
+      interaction.user.id
+    );
   } catch (err) {
-    consola.error({
-      message: `Error setting discord rules deploy link interactions: ${err}`,
-      badge: true,
-    });
+    error(
+      'rules deploy unlink command',
+      interaction.user.username,
+      interaction.user.id
+    );
   }
 };
