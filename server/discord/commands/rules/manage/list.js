@@ -3,11 +3,7 @@ const consola = require('consola');
 const { EmbedBuilder } = require('discord.js');
 
 const DiscordRules = require('../../../../modals/DiscordRules');
-const {
-  info,
-  success,
-  error,
-} = require('../../../../utils/discord/commands/log');
+const { info, success } = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
@@ -47,10 +43,9 @@ module.exports = async (client, interaction) => {
       interaction.user.id
     );
   } catch (err) {
-    error(
-      'rules deploy list command',
-      interaction.user.username,
-      interaction.user.id
-    );
+    consola.error({
+      message: `Errorr in running discord listing rules command: ${err}`,
+      badge: true,
+    });
   }
 };

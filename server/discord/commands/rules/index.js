@@ -1,6 +1,7 @@
 const consola = require('consola');
 
 const manage = require('./manage');
+const channel = require('./channel');
 
 module.exports = async (client, interaction) => {
   try {
@@ -10,6 +11,9 @@ module.exports = async (client, interaction) => {
       case 'manage':
         await manage(client, interaction);
         break;
+      case 'channel':
+        await channel(client, interaction);
+        break;
       default:
         consola.error({
           message: `Unknown subcommand group: ${getSubcommandGroup}`,
@@ -18,7 +22,7 @@ module.exports = async (client, interaction) => {
     }
   } catch (err) {
     consola.error({
-      message: `Error setting discord rules interactions: ${err}`,
+      message: `Errorr in running setting discord rules interactions: ${err}`,
       badge: true,
     });
   }
