@@ -2,12 +2,8 @@ const consola = require('consola');
 
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const DiscordRules = require('../../../../modals/DiscordRules');
-const {
-  info,
-  success,
-  error,
-} = require('../../../../utils/discord/commands/log');
+const DiscordRule = require('../../../../modals/DiscordRule');
+const { info, success } = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
@@ -17,7 +13,7 @@ module.exports = async (client, interaction) => {
       interaction.user.id
     );
 
-    const rules = await DiscordRules.find({});
+    const rules = await DiscordRule.find({});
 
     if (rules.length === 0) {
       return await interaction.reply({
@@ -66,7 +62,7 @@ module.exports = async (client, interaction) => {
       }
 
       if (i.customId === 'confirm') {
-        await DiscordRules.deleteMany({
+        await DiscordRule.deleteMany({
           guildId: interaction.guild.id,
         });
 
@@ -99,10 +95,9 @@ module.exports = async (client, interaction) => {
       interaction.user.id
     );
   } catch (err) {
-    error(
-      'rules deploy clear command',
-      interaction.user.username,
-      interaction.user.id
-    );
+    consola.error({
+      message: `Errorr in running discord clearing rules command: ${err}`,
+      badge: true,
+    });
   }
 };

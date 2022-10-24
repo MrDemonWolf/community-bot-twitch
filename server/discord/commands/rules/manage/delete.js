@@ -1,11 +1,7 @@
 const consola = require('consola');
 
-const DiscordRules = require('../../../../modals/DiscordRules');
-const {
-  info,
-  success,
-  error,
-} = require('../../../../utils/discord/commands/log');
+const DiscordRule = require('../../../../modals/DiscordRule');
+const { info, success } = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
@@ -21,7 +17,7 @@ module.exports = async (client, interaction) => {
     const ruleId = interaction.options.getString('ruleid');
 
     try {
-      ruleData = await DiscordRules.findById(ruleId);
+      ruleData = await DiscordRule.findById(ruleId);
 
       if (!ruleData) {
         consola.error({
@@ -58,10 +54,9 @@ module.exports = async (client, interaction) => {
       interaction.user.id
     );
   } catch (err) {
-    error(
-      'rules deploy delete command',
-      interaction.user.username,
-      interaction.user.id
-    );
+    consola.error({
+      message: `Errorr in running discord deleting rule command: ${err}`,
+      badge: true,
+    });
   }
 };

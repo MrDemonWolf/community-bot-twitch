@@ -14,15 +14,7 @@ function success(message, username, id) {
   });
 }
 
-function error(message, username, id) {
-  consola.error({
-    message: `* Error executing ${message} from ${username} (${id})`,
-    badge: true,
-  });
-}
-
 module.exports = {
   success,
   info,
-  error,
 };

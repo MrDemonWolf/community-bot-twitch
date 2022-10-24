@@ -44,7 +44,7 @@ module.exports = async (client, interaction) => {
     }
   } catch (err) {
     consola.error({
-      message: `Error setting discord rules manage interactions: ${err}`,
+      message: `Errorr setting discord rules manage interactions: ${err}`,
       badge: true,
     });
   }

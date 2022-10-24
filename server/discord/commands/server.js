@@ -1,7 +1,7 @@
 const consola = require('consola');
 
 const { EmbedBuilder } = require('discord.js');
-const { info, success, error } = require('../../utils/discord/commands/log');
+const { info, success } = require('../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
@@ -176,6 +176,9 @@ module.exports = async (client, interaction) => {
 
     success('server command', interaction.user.username, interaction.user.id);
   } catch (err) {
-    error('server command', interaction.user.username, interaction.user.id);
+    consola.error({
+      message: `Error in running discord bot command: ${err}`,
+      badge: true,
+    });
   }
 };
