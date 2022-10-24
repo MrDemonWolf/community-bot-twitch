@@ -30,6 +30,14 @@ module.exports = async (client, interaction) => {
       return;
     }
 
+    if (discordGuild.rules.messageId) {
+      await interaction.reply({
+        content: 'Rules already published. Please unpublish first.',
+        ephemeral: true,
+      });
+      return;
+    }
+
     const rulesChannel = guild.channels.cache.get(discordGuild.rules.channelId);
 
     if (!rulesChannel) {

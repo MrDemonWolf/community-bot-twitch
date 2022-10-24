@@ -28,12 +28,32 @@ module.exports = async (client, interaction) => {
       return;
     }
 
+    if (!discordGuild.rules.messageId) {
+      await interaction.reply({
+        content: 'Rules already unpublished. Please publish first.',
+        ephemeral: true,
+      });
+      return;
+    }
+
     const rulesChannel = guild.channels.cache.get(discordGuild.rules.channelId);
     const message = await rulesChannel.messages.fetch(
       discordGuild.rules.messageId
     );
 
     await message.delete();
+
+    await DiscordGuild.findOneAndUpdate(
+      {
+        guildId: guild.id,
+      },
+      {
+        $unset: {
+          'rules.channeklId': '',
+          'rules.messageId': '',
+        },
+      }
+    );
 
     await interaction.reply({
       content: 'Rules unpublished.',
