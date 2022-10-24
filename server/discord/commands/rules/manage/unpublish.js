@@ -29,6 +29,9 @@ module.exports = async (client, interaction) => {
     }
 
     const rulesChannel = guild.channels.cache.get(discordGuild.rules.channelId);
+    const message = await rulesChannel.messages.fetch(
+      discordGuild.rules.messageId
+    );
 
     await message.delete();
 
