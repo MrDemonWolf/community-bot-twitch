@@ -1,13 +1,15 @@
 const consola = require('consola');
 
 const DiscordGuild = require('../../../../modals/DiscordGuild');
+const { info, success } = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
-    consola.info({
-      message: `* Executed rules deploy unlink command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    info(
+      'rules deploy unlink command',
+      interaction.user.username,
+      interaction.user.id
+    );
 
     const manageId = await DiscordGuild.findOne({
       guildId: interaction.guild.id,
@@ -43,17 +45,14 @@ module.exports = async (client, interaction) => {
       ephemeral: true,
     });
 
-    consola.success({
-      message: `* Successfully unlinked rules to received from ${interaction.user.username} (${interaction.user.id})`,
-    });
-
-    consola.success({
-      message: `* Successfully executed rules deploy unlink command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    success(
+      'rules deploy unlink command',
+      interaction.user.username,
+      interaction.user.id
+    );
   } catch (err) {
     consola.error({
-      message: `Error setting discord rules deploy liunlinknk interactions: ${err}`,
+      message: `Errorr in running discord unlinking rules command: ${err}`,
       badge: true,
     });
   }

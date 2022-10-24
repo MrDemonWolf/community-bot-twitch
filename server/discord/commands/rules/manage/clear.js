@@ -2,7 +2,7 @@ const consola = require('consola');
 
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-const DiscordRules = require('../../../../modals/DiscordRules');
+const DiscordRule = require('../../../../modals/DiscordRule');
 const { info, success } = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
@@ -13,7 +13,7 @@ module.exports = async (client, interaction) => {
       interaction.user.id
     );
 
-    const rules = await DiscordRules.find({});
+    const rules = await DiscordRule.find({});
 
     if (rules.length === 0) {
       return await interaction.reply({
@@ -62,7 +62,7 @@ module.exports = async (client, interaction) => {
       }
 
       if (i.customId === 'confirm') {
-        await DiscordRules.deleteMany({
+        await DiscordRule.deleteMany({
           guildId: interaction.guild.id,
         });
 

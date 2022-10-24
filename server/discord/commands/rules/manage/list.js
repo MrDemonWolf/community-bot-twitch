@@ -2,7 +2,7 @@
 const consola = require('consola');
 const { EmbedBuilder } = require('discord.js');
 
-const DiscordRules = require('../../../../modals/DiscordRules');
+const DiscordRule = require('../../../../modals/DiscordRule');
 const { info, success } = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
@@ -13,7 +13,7 @@ module.exports = async (client, interaction) => {
       interaction.user.id
     );
 
-    const rules = await DiscordRules.find({});
+    const rules = await DiscordRule.find({});
 
     const { name } = interaction.guild;
 

@@ -1,6 +1,6 @@
 const consola = require('consola');
 
-const DiscordRules = require('../../../../modals/DiscordRules');
+const DiscordRule = require('../../../../modals/DiscordRule');
 const { info, success } = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
@@ -17,7 +17,7 @@ module.exports = async (client, interaction) => {
     const ruleId = interaction.options.getString('ruleid');
 
     try {
-      ruleData = await DiscordRules.findById(ruleId);
+      ruleData = await DiscordRule.findById(ruleId);
 
       if (!ruleData) {
         consola.error({

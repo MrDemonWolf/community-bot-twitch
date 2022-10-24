@@ -1,6 +1,6 @@
 const consola = require('consola');
 
-const DiscordRules = require('../../../../modals/DiscordRules');
+const DiscordRule = require('../../../../modals/DiscordRule');
 const { info, success } = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
@@ -13,7 +13,7 @@ module.exports = async (client, interaction) => {
 
     const rule = interaction.options.getString('rule');
 
-    const newRule = new DiscordRules({
+    const newRule = new DiscordRule({
       rule,
     });
 
