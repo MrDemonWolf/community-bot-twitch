@@ -1,13 +1,11 @@
 const consola = require('consola');
 
-const { EmbedBuilder, discordSort } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
+const { info, success, error } = require('../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
-    consola.info({
-      message: `* Executed info command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    info('bot command', interaction.user.username, interaction.user.id);
 
     const { guild } = interaction;
 
@@ -105,18 +103,12 @@ module.exports = async (client, interaction) => {
         text: `Requested by ${interaction.user.username}#${interaction.user.discriminator}`,
       });
 
-    consola.success({
-      message: `* Successfully executed info command from ${interaction.user.username} (${interaction.user.id})`,
-    });
-
     await interaction.reply({
       embeds: [embed],
     });
+
+    success('bot command', interaction.user.username, interaction.user.id);
   } catch (err) {
-    console.error(err);
-    consola.error({
-      message: `Error executing info command: ${err}`,
-      badge: true,
-    });
+    error('bot command', interaction.user.username, interaction.user.id);
   }
 };

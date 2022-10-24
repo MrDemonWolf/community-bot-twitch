@@ -1,13 +1,20 @@
 const consola = require('consola');
 
 const DiscordRules = require('../../../../modals/DiscordRules');
+const {
+  info,
+  success,
+  error,
+} = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
-    consola.info({
-      message: `* Executed rules manage create command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    info(
+      'rules deploy create command',
+      interaction.user.username,
+      interaction.user.id
+    );
+
     const rule = interaction.options.getString('rule');
 
     const newRule = new DiscordRules({
@@ -21,18 +28,16 @@ module.exports = async (client, interaction) => {
       ephemeral: true,
     });
 
-    consola.success({
-      message: `* Create new rule: ${rule} received from ${interaction.user.username} (${interaction.user.id})`,
-    });
-
-    consola.success({
-      message: `* Successfully executed rules manage create command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    success(
+      `rules deploy create command. Rule: ${newRule.id}.`,
+      interaction.user.username,
+      interaction.user.id
+    );
   } catch (err) {
-    consola.error({
-      message: `Error setting discord rules manage create interactions: ${err}`,
-      badge: true,
-    });
+    error(
+      'rules deploy create command',
+      interaction.user.username,
+      interaction.user.id
+    );
   }
 };

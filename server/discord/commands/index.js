@@ -33,10 +33,6 @@ module.exports = (client) => {
           });
       }
     });
-    consola.success({
-      message: 'Discord commands initialized',
-      badge: true,
-    });
   } catch (err) {
     consola.error({
       message: `Error setting discord commands interactions: ${err}`,

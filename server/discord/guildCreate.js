@@ -18,12 +18,12 @@ module.exports = async (client, guild) => {
     await newGuild.save();
 
     consola.info({
-      message: `Joined new guild: ${guild.name}`,
+      message: `Joined new discord guild: ${guild.name}`,
       badge: true,
     });
   } catch (err) {
     consola.error({
-      message: err,
+      message: `Error joining new discord guild: ${err}`,
       badge: true,
     });
   }

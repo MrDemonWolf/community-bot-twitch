@@ -14,7 +14,7 @@ module.exports = async (client) => {
     });
   } catch (err) {
     consola.error({
-      message: `Error setting custom activity: ${err}`,
+      message: `Error setting custom discord activity: ${err}`,
       badge: true,
     });
   }

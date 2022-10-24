@@ -1,13 +1,11 @@
 const consola = require('consola');
 
 const { EmbedBuilder } = require('discord.js');
+const { info, success, error } = require('../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
-    consola.info({
-      message: `* Executed user command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    info('user command', interaction.user.username, interaction.user.id);
 
     const { guild } = interaction;
 
@@ -62,6 +60,7 @@ module.exports = async (client, interaction) => {
     await interaction.reply({
       embeds: [embed],
     });
+    success('user command', interaction.user.username, interaction.user.id);
   } catch (err) {
     console.error(err);
     consola.error({

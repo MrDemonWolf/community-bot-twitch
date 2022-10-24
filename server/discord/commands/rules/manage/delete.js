@@ -1,13 +1,19 @@
 const consola = require('consola');
 
 const DiscordRules = require('../../../../modals/DiscordRules');
+const {
+  info,
+  success,
+  error,
+} = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
-    consola.info({
-      message: `* Executed rules manage remove command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    info(
+      'rules deploy delete command',
+      interaction.user.username,
+      interaction.user.id
+    );
 
     let ruleData = {};
 
@@ -46,18 +52,16 @@ module.exports = async (client, interaction) => {
       ephemeral: true,
     });
 
-    consola.success({
-      message: `* Rule deleted: ${ruleData.rule} received from ${interaction.user.username} (${interaction.user.id})`,
-    });
-
-    consola.success({
-      message: `* Successfully executed rules manage delete command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    success(
+      `rules deploy delete command. Deleted Rule: ${ruleData.id}.`,
+      interaction.user.username,
+      interaction.user.id
+    );
   } catch (err) {
-    consola.error({
-      message: `Error setting discord rules manage addelete interactions: ${err}`,
-      badge: true,
-    });
+    error(
+      'rules deploy delete command',
+      interaction.user.username,
+      interaction.user.id
+    );
   }
 };

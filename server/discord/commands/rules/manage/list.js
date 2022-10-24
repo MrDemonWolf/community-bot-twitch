@@ -3,13 +3,19 @@ const consola = require('consola');
 const { EmbedBuilder } = require('discord.js');
 
 const DiscordRules = require('../../../../modals/DiscordRules');
+const {
+  info,
+  success,
+  error,
+} = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
-    consola.info({
-      message: `* Executed rules manage list command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    info(
+      'rules deploy list command',
+      interaction.user.username,
+      interaction.user.id
+    );
 
     const rules = await DiscordRules.find({});
 
@@ -35,14 +41,16 @@ module.exports = async (client, interaction) => {
 
     await interaction.reply({ embeds: [embed] });
 
-    consola.success({
-      message: `* Successfully executed rules manage list command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    success(
+      'rules deploy list command',
+      interaction.user.username,
+      interaction.user.id
+    );
   } catch (err) {
-    consola.error({
-      message: `Error setting discord rules manage list interactions: ${err}`,
-      badge: true,
-    });
+    error(
+      'rules deploy list command',
+      interaction.user.username,
+      interaction.user.id
+    );
   }
 };

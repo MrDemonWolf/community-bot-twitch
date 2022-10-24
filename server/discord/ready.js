@@ -12,12 +12,12 @@ module.exports = async (client) => {
     commands(client);
 
     consola.success({
-      message: `Logged in as ${client.user.tag}`,
+      message: `Discord Bot Logged in as ${client.user.tag}`,
       badge: true,
     });
   } catch (err) {
     consola.error({
-      message: err,
+      message: `Error setting discord bot: ${err}`,
       badge: true,
     });
   }

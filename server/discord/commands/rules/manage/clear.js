@@ -3,13 +3,19 @@ const consola = require('consola');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 const DiscordRules = require('../../../../modals/DiscordRules');
+const {
+  info,
+  success,
+  error,
+} = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
   try {
-    consola.info({
-      message: `* Executed rules manage clear command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    info(
+      'rules deploy clear command',
+      interaction.user.username,
+      interaction.user.id
+    );
 
     const rules = await DiscordRules.find({});
 
@@ -87,14 +93,16 @@ module.exports = async (client, interaction) => {
       }
     });
 
-    consola.success({
-      message: `* Successfully executed rules manage clear command from ${interaction.user.username} (${interaction.user.id})`,
-      badge: true,
-    });
+    success(
+      'rules deploy clear command',
+      interaction.user.username,
+      interaction.user.id
+    );
   } catch (err) {
-    consola.error({
-      message: `Error setting discord rules manage clear interactions: ${err}`,
-      badge: true,
-    });
+    error(
+      'rules deploy clear command',
+      interaction.user.username,
+      interaction.user.id
+    );
   }
 };

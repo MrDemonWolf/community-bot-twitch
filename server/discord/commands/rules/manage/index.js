@@ -42,10 +42,6 @@ module.exports = async (client, interaction) => {
         });
         break;
     }
-
-    consola.success({
-      message: `* Successfully executed rules manage command from ${interaction.user.username} (${interaction.user.id})`,
-    });
   } catch (err) {
     consola.error({
       message: `Error setting discord rules manage interactions: ${err}`,
