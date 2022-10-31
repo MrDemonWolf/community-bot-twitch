@@ -4,6 +4,7 @@ const dayjs = require('dayjs');
 const DiscordRule = require('../../../../modals/DiscordRule');
 const DiscordGuild = require('../../../../modals/DiscordGuild');
 const { info, success } = require('../../../../utils/discord/commands/log');
+const rulesUpdater = require('../../../../utils/discord/commands/rulesUpdater');
 
 module.exports = async (client, interaction) => {
   try {
@@ -82,6 +83,11 @@ module.exports = async (client, interaction) => {
       interaction.user.username,
       interaction.user.id
     );
+
+    // update the rules message if it's already published
+    if (discordGuild.rules.channelId && discordGuild.rules.messageId) {
+      await rulesUpdater(guild);
+    }
   } catch (err) {
     consola.error({
       message: `Errorr in running discord deleting rule command: ${err}`,

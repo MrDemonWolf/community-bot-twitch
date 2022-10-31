@@ -43,11 +43,6 @@ module.exports = async (client, interaction) => {
 
     await discordGuild.save();
 
-    // update the rules message if it's already published
-    if (discordGuild.rules.channelId && discordGuild.rules.messageId) {
-      await rulesUpdater(guild);
-    }
-
     await interaction.reply({
       content: `New rule created: ${rule}`,
       ephemeral: true,
@@ -58,6 +53,11 @@ module.exports = async (client, interaction) => {
       interaction.user.username,
       interaction.user.id
     );
+
+    // update the rules message if it's already published
+    if (discordGuild.rules.channelId && discordGuild.rules.messageId) {
+      await rulesUpdater(guild);
+    }
   } catch (err) {
     consola.error({
       message: `Errorr in running discord creating rule command: ${err}`,
