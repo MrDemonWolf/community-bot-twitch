@@ -1,6 +1,8 @@
 const consola = require('consola');
+const dayjs = require('dayjs');
 
 const DiscordRule = require('../../../../modals/DiscordRule');
+const DiscordGuild = require('../../../../modals/DiscordGuild');
 const { info, success } = require('../../../../utils/discord/commands/log');
 
 module.exports = async (client, interaction) => {
@@ -11,11 +13,32 @@ module.exports = async (client, interaction) => {
       interaction.user.id
     );
 
+    const { guild } = interaction;
+
+    const discordGuild = await DiscordGuild.findOne({
+      guildId: guild.id,
+    });
+
+    if (!discordGuild) {
+      consola.error({
+        message: `No guild found for ${guild.name}`,
+        badge: true,
+      });
+      return;
+    }
+
     let ruleData = {};
 
-    // discord slash command subcommand option
+    /**
+     * Get discord interaction options
+     */
     const ruleId = interaction.options.getString('ruleid');
 
+    /**
+     * Get the rule from the database
+     * checks if the rule exists
+     * if it does, delete it
+     */
     try {
       ruleData = await DiscordRule.findById(ruleId);
 
@@ -40,8 +63,14 @@ module.exports = async (client, interaction) => {
       });
     }
 
-    // delete rule
     await ruleData.delete();
+
+    /**
+     * Update the last updated rules date
+     */
+    discordGuild.rules.lastUpdated = dayjs();
+
+    await discordGuild.save();
 
     await interaction.reply({
       content: `Rule has been deleted: ${ruleData.rule}`,

@@ -1,4 +1,5 @@
 const consola = require('consola');
+const dayjs = require('dayjs');
 
 const { EmbedBuilder } = require('discord.js');
 
@@ -61,23 +62,21 @@ module.exports = async (client, interaction) => {
       return;
     }
 
-    const rulesList = rules.map((rule, index) => ({
-      name: `${index + 1}. ${rule.rule}`,
-      value: '\u200b',
-    }));
+    const rulesList = rules.map((rule, index) => `${index + 1}. ${rule.rule}`);
+
+    const lastUpdatedTimestamp = dayjs(discordGuild.rules.lastUpdated).unix();
+
+    // convert lastUpdatedTimestamp to discord fancy format
+    const lastUpdated = `<t:${lastUpdatedTimestamp}:F>`;
 
     const embed = new EmbedBuilder()
       .setColor('#0099ff')
       .setTitle(`${name} Rules`)
-      .addFields(rulesList)
+      .setDescription(rulesList.join('\n'))
       .setTimestamp()
       .setFooter({
-        text: `Requested by ${interaction.user.username}#${interaction.user.discriminator}`,
+        text: `Last updated: ${lastUpdated}`,
       });
-
-    if (rulesList.length === 0) {
-      embed.setDescription('No rules found.');
-    }
 
     const messageId = await rulesChannel.send({ embeds: [embed] });
 
