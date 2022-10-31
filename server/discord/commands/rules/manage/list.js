@@ -35,7 +35,11 @@ module.exports = async (client, interaction) => {
       embed.setDescription('No rules found.');
     }
 
-    await interaction.reply({ embeds: [embed] });
+    // with ephemeral: true, the message will only be visible to the user who triggered the command
+    await interaction.reply({
+      embeds: [embed],
+      ephemeral: true,
+    });
 
     success(
       'rules deploy list command',

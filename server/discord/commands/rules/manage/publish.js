@@ -64,18 +64,13 @@ module.exports = async (client, interaction) => {
 
     const rulesList = rules.map((rule, index) => `${index + 1}. ${rule.rule}`);
 
-    const lastUpdatedTimestamp = dayjs(discordGuild.rules.lastUpdated).unix();
-
-    // convert lastUpdatedTimestamp to discord fancy format
-    const lastUpdated = `<t:${lastUpdatedTimestamp}:F>`;
-
     const embed = new EmbedBuilder()
       .setColor('#0099ff')
       .setTitle(`${name} Rules`)
       .setDescription(rulesList.join('\n'))
       .setTimestamp()
       .setFooter({
-        text: `Last updated: ${lastUpdated}`,
+        text: 'Last updated:',
       });
 
     const messageId = await rulesChannel.send({ embeds: [embed] });
