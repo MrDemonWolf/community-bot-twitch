@@ -1,7 +1,10 @@
 const consola = require('consola');
+const dayjs = require('dayjs');
 
 const DiscordRule = require('../../../../modals/DiscordRule');
+const DiscordGuild = require('../../../../modals/DiscordGuild');
 const { info, success } = require('../../../../utils/discord/commands/log');
+const rulesUpdater = require('../../../../utils/discord/commands/rulesUpdater');
 
 module.exports = async (client, interaction) => {
   try {
@@ -11,6 +14,20 @@ module.exports = async (client, interaction) => {
       interaction.user.id
     );
 
+    const { guild } = interaction;
+
+    const discordGuild = await DiscordGuild.findOne({
+      guildId: guild.id,
+    });
+
+    if (!discordGuild) {
+      consola.error({
+        message: `No guild found for ${guild.name}`,
+        badge: true,
+      });
+      return;
+    }
+
     const rule = interaction.options.getString('rule');
 
     const newRule = new DiscordRule({
@@ -18,6 +35,18 @@ module.exports = async (client, interaction) => {
     });
 
     await newRule.save();
+
+    /**
+     * Update the last updated rules date
+     */
+    discordGuild.rules.lastUpdated = dayjs();
+
+    await discordGuild.save();
+
+    // update the rules message if it's already published
+    if (discordGuild.rules.channelId && discordGuild.rules.messageId) {
+      await rulesUpdater(guild);
+    }
 
     await interaction.reply({
       content: `New rule created: ${rule}`,
