@@ -10,7 +10,8 @@ const DiscordGuildSchema = new Schema({
   rules: {
     channelId: String,
     messageId: String,
-    lastUpdated: Date,
+    updatedAt: Date,
+    publishedAt: Date,
   },
 });
 

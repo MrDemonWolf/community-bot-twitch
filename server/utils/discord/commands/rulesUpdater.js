@@ -57,7 +57,7 @@ module.exports = async (guild) => {
     const rulesList = rules.map((rule, index) => `${index + 1}. ${rule.rule}`);
 
     // convert lastUpdatedTimestamp to discord fancy format
-    const lastUpdated = `<t:${dayjs(discordGuild.rules.lastUpdated).unix()}:F>`;
+    const lastUpdated = `<t:${dayjs(discordGuild.rules.updatedAt).unix()}:F>`;
 
     const embed = new EmbedBuilder()
       .setColor('#0099ff')
