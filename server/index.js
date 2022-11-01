@@ -47,19 +47,20 @@ discordClient
   });
 
 /** Connect to Twitch */
-twitchClient.connect().then(() => {
-  consola
-    .success({
+twitchClient
+  .connect()
+  .then(() => {
+    consola.success({
       message: 'Twitch connected',
       badge: true,
-    })
-    .catch((err) => {
-      consola.error({
-        message: `Error connecting to Twitch: ${err}`,
-        badge: true,
-      });
     });
-});
+  })
+  .catch((err) => {
+    consola.error({
+      message: `Error connecting to Twitch: ${err}`,
+      badge: true,
+    });
+  });
 
 /**
  * Cloes connection to mongodb on exit.
