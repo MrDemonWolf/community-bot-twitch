@@ -41,13 +41,23 @@ discordClient
   })
   .catch((err) => {
     consola.error({
-      message: `Error logging in: ${err}`,
+      message: `Error connecting to Discord: ${err}`,
       badge: true,
     });
   });
 
 /** Connect to Twitch */
-twitchClient.connect();
+twitchClient.connect().then(() => {
+  consola.success({
+    message: 'Twitch connected',
+    badge: true,
+  }).catch((err) => {
+    consola.error({
+      message: `Error connecting to Twitch: ${err}`,
+      badge: true,
+    });
+  }
+});
 /**
  * Cloes connection to mongodb on exit.
  */

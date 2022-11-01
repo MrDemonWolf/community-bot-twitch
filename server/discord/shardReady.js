@@ -5,19 +5,13 @@ const commands = require('./commands');
 
 module.exports = async (client) => {
   try {
-    // set activity
-    activity(client);
-
-    // set commands
-    commands(client);
-
     consola.success({
-      message: `Discord Bot Logged in as ${client.user.tag}`,
+      message: `Discord Bot Shard ${client.shard.ids[0]} Logged in as ${client.user.tag}`,
       badge: true,
     });
   } catch (err) {
     consola.error({
-      message: `Error ready discord bot: ${err}`,
+      message: `Error shardReady discord bot: ${err}`,
       badge: true,
     });
   }

@@ -1,7 +1,7 @@
 const tmi = require('tmi.js');
 const pb = require('@madelsberger/pausebuffer');
 
-const commands = require('./commands');
+const message = require('./message');
 
 /**
  * Load environment variables from the .env file, where API keys and passwords are stored.
@@ -26,17 +26,11 @@ const client = pb.wrap(new tmi.Client(options));
 
 // pass commands to the client that is listening for them
 client.on('message', async (channel, tags, message, self) => {
-  // Ignore echoed messages.
-  if (self) return;
+  await message(client, channel, tags, message, self);
+});
 
-  // Ignore messages not starting with the prefix.
-  if (message.indexOf(process.env.TWITCH_PREFIX) !== 0) return;
-
-  // ingore whispers
-  if (tags['message-type'] === 'whisper') return;
-
-  // pass the message to the commands handler
-  await commands(client, channel, tags, message, self);
+client.on('disconnected', (reason) => {
+  console.log(`Disconnected from Twitch: ${reason}`);
 });
 
 module.exports = client;
