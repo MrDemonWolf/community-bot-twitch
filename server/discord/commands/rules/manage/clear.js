@@ -1,4 +1,5 @@
 const consola = require('consola');
+const dayjs = require('dayjs');
 
 const {
   ActionRowBuilder,
@@ -136,6 +137,11 @@ module.exports = async (client, interaction) => {
       });
 
     await rulesMessage.edit({ embeds: [embed] });
+
+    /**
+     * Update the last updated rules date
+     */
+    discordGuild.rules.updatedAt = dayjs();
 
     success(
       'rules deploy clear command',

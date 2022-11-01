@@ -35,7 +35,7 @@ client.on('disconnected', async (reason) => {
   await disconnectEvent(reason);
 });
 
-client.on('reconnect', async ()) => {
+client.on('reconnect', async () => {
   await reconnectEvent();
 });
 

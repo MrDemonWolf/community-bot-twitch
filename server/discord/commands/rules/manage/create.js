@@ -39,7 +39,7 @@ module.exports = async (client, interaction) => {
     /**
      * Update the last updated rules date
      */
-    discordGuild.rules.lastUpdated = dayjs();
+    discordGuild.rules.updatedAt = dayjs();
 
     await discordGuild.save();
 
