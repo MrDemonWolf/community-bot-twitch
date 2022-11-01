@@ -1,7 +1,9 @@
 const tmi = require('tmi.js');
 const pb = require('@madelsberger/pausebuffer');
 
-const message = require('./message');
+const messageEvent = require('./message');
+const disconnectEvent = require('./disconnect');
+const reconnectEvent = require('./reconnecting');
 
 /**
  * Load environment variables from the .env file, where API keys and passwords are stored.
@@ -26,11 +28,15 @@ const client = pb.wrap(new tmi.Client(options));
 
 // pass commands to the client that is listening for them
 client.on('message', async (channel, tags, message, self) => {
-  await message(client, channel, tags, message, self);
+  await messageEvent(client, channel, tags, message, self);
 });
 
-client.on('disconnected', (reason) => {
-  console.log(`Disconnected from Twitch: ${reason}`);
+client.on('disconnected', async (reason) => {
+  await disconnectEvent(reason);
+});
+
+client.on('reconnect', async ()) => {
+  await reconnectEvent();
 });
 
 module.exports = client;
