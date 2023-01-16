@@ -1,5 +1,6 @@
 const consola = require('consola');
 const bot = require('./bot');
+const status = require('./status');
 
 module.exports = async (client, channel, tags, message, self) => {
   const [command, ...args] = message
@@ -10,6 +11,7 @@ module.exports = async (client, channel, tags, message, self) => {
     case 'bot':
       bot(client, channel, tags, message, self);
       break;
+
     default:
       break;
   }

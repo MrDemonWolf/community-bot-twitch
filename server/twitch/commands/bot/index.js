@@ -1,6 +1,6 @@
 const consola = require('consola');
 
-const { info } = require('../../../utils/discord/commands/log');
+const { info } = require('../../../utils/twitch/commands/log');
 
 const uptime = require('./uptime');
 
