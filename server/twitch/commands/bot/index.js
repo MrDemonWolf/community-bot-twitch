@@ -2,6 +2,8 @@ const consola = require('consola');
 
 const { info } = require('../../../utils/twitch/commands/log');
 
+const { say } = require('../../../utils/twitch/streamelments');
+
 const uptime = require('./uptime');
 
 module.exports = async (client, channel, tags, message, self) => {
@@ -17,8 +19,8 @@ module.exports = async (client, channel, tags, message, self) => {
         uptime(client, channel, tags, message, self);
         break;
       default:
-        client.say(
-          channel,
+        say(
+          process.env.STREAMELEMENTS_CHANNEL_ID,
           `@${tags.username}, I'm sorry, but I don't know that command.`
         );
         break;
