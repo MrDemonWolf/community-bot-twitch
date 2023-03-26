@@ -1,5 +1,5 @@
 const consola = require('consola');
-const ping = require('./ping');
+const bot = require('./bot');
 
 module.exports = async (client, channel, tags, message, self) => {
   const [command, ...args] = message
@@ -7,9 +7,10 @@ module.exports = async (client, channel, tags, message, self) => {
     .split(/ +/g);
 
   switch (command) {
-    case 'ping':
-      ping(client, channel, tags, message, self);
+    case 'bot':
+      bot(client, channel, tags, message, self);
       break;
+
     default:
       break;
   }

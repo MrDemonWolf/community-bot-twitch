@@ -17,6 +17,15 @@ mongoose.connect(process.env.DATABASE_URI, {
 });
 const db = mongoose.connection;
 
+db.on('error', (err) => {
+  consola.error({
+    message: `Error connecting to MongoDB: ${err}`,
+    badge: true,
+  });
+  /** Exit process if error connecting to MongoDB */
+  process.exit(1);
+});
+
 db.once('open', () => {
   // consola badge for mongoose connection
   consola.success({
@@ -29,44 +38,45 @@ db.once('open', () => {
     message: `Environment: ${process.env.NODE_ENV || 'development'}`,
     badge: true,
   });
+
+  /** Connect to Discord */
+  discordClient
+    .login(`Bot ${process.env.DISCORD_TOKEN}`)
+    .then(() => {
+      consola.success({
+        message: 'Discord connected',
+        badge: true,
+      });
+    })
+    .catch((err) => {
+      consola.error({
+        message: `Error connecting to Discord: ${err}`,
+        badge: true,
+      });
+    });
+
+  /** Connect to Twitch */
+  twitchClient
+    .connect()
+    .then(() => {
+      consola.success({
+        message: 'Twitch connected',
+        badge: true,
+      });
+    })
+    .catch((err) => {
+      consola.error({
+        message: `Error connecting to Twitch: ${err}`,
+        badge: true,
+      });
+    });
 });
-
-discordClient
-  .login(`Bot ${process.env.DISCORD_TOKEN}`)
-  .then(() => {
-    consola.success({
-      message: 'Discord connected',
-      badge: true,
-    });
-  })
-  .catch((err) => {
-    consola.error({
-      message: `Error connecting to Discord: ${err}`,
-      badge: true,
-    });
-  });
-
-/** Connect to Twitch */
-twitchClient
-  .connect()
-  .then(() => {
-    consola.success({
-      message: 'Twitch connected',
-      badge: true,
-    });
-  })
-  .catch((err) => {
-    consola.error({
-      message: `Error connecting to Twitch: ${err}`,
-      badge: true,
-    });
-  });
 
 /**
  * Cloes connection to mongodb on exit.
  */
 process.on('SIGINT', async () => {
-  // disconnect from discord
+  /** Disconnect from Discord */
   try {
     discordClient.destroy();
     consola.success({
@@ -80,8 +90,21 @@ process.on('SIGINT', async () => {
     });
   }
 
-  // disconnect from mongodb
+  /** Disconnect from Twitch */
+  try {
+    twitchClient.disconnect();
+    consola.success({
+      message: 'Twitch disconnected',
+      badge: true,
+    });
+  } catch (err) {
+    consola.error({
+      message: `Error disconnecting from twitch: ${err}`,
+      badge: true,
+    });
+  }
 
+  /** Disconnect from MongoDB */
   try {
     await mongoose.disconnect();
     consola.success({
