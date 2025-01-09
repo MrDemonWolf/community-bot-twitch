@@ -1,4 +1,6 @@
-# Community Bot for MrDemonWolf, Inc. - Twitch
+# 🐺 Community Bot for MrDemonWolf, Inc. - Twitch 🐾
+
+![Community Bot Banner](banner.jpg)
 
 Community Twitch bot for MrDemonWolf, Inc. Community
 

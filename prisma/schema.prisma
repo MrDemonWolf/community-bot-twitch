@@ -31,3 +31,12 @@ model TwitchChannel {
   DiscordGuild    DiscordGuild? @relation(fields: [guildId], references: [id])
   guildId         String?
 }
+
+model TwitchCredential {
+  id           String   @id @default(uuid())
+  accessToken  String
+  refreshToken String
+  expiresIn    Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
