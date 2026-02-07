@@ -8,9 +8,15 @@ const envSchema = z.object({
   DATABASE_URL: z
     .string()
     .refine((url) => url.startsWith("postgres"), "Invalid database URL"),
-  TWITCH_APPLIICATION_CLIENT_ID: z.string(),
-  TWITCH_APPLIICATION_CLIENT_SERECT: z.string(),
-  TWITCH_APPLIICATION_TOKEN: z.string(),
+  TWITCH_APPLICATION_CLIENT_ID: z
+    .string()
+    .min(1, "Twitch Client ID is required"),
+  TWITCH_APPLICATION_CLIENT_SECRET: z
+    .string()
+    .min(1, "Twitch Client Secret is required"),
+  INIT_TWITCH_ACCESS_TOKEN: z.string().min(1).optional(),
+  INIT_TWITCH_REFRESH_TOKEN: z.string().min(1).optional(),
+  TWITCH_CHANNEL: z.string().min(1, "Twitch channel is required"),
 });
 
 const parsed = envSchema.safeParse(process.env);
