@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -14,29 +15,98 @@ datasource db {
 }
 
 model DiscordGuild {
-  id                       String          @id @default(uuid())
-  guildId                  String          @unique
-  twitchChannel            String?
-  twitchChannelScheduleURI String?
-  joinedAt                 DateTime        @default(now())
-  updatedAt                DateTime        @updatedAt
-  TwitchChannel            TwitchChannel[]
+  id            String          @id @default(uuid())
+  guildId       String          @unique
+  joinedAt      DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  TwitchChannel TwitchChannel[]
 }
 
 model TwitchChannel {
   id              String        @id @default(uuid())
   twitchChannelId String        @unique
-  joinedAt        DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
   DiscordGuild    DiscordGuild? @relation(fields: [guildId], references: [id])
   guildId         String?
+  joinedAt        DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }
 
 model TwitchCredential {
-  id           String   @id @default(uuid())
-  accessToken  String
-  refreshToken String
-  expiresIn    Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  accessToken         String
+  refreshToken        String
+  expiresIn           Int
+  obtainmentTimestamp BigInt
+  scope               String[]
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+enum TwitchResponseType {
+  SAY
+  MENTION
+  REPLY
+}
+
+enum TwitchAccessLevel {
+  EVERYONE
+  SUBSCRIBER
+  REGULAR
+  VIP
+  MODERATOR
+  BROADCASTER
+}
+
+enum TwitchStreamStatus {
+  ONLINE
+  OFFLINE
+  BOTH
+}
+
+model TwitchChatCommand {
+  id             String             @id @default(uuid())
+  name           String             @unique
+  enabled        Boolean            @default(true)
+  response       String
+  responseType   TwitchResponseType @default(SAY)
+  globalCooldown Int                @default(0)
+  userCooldown   Int                @default(0)
+  accessLevel    TwitchAccessLevel  @default(EVERYONE)
+  limitToUser    String?
+  streamStatus   TwitchStreamStatus @default(BOTH)
+  hidden         Boolean            @default(false)
+  aliases        String[]           @default([])
+  keywords       String[]           @default([])
+  regex          String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}
+
+model TwitchRegular {
+  id             String   @id @default(uuid())
+  twitchUserId   String   @unique
+  twitchUsername String
+  addedBy        String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+enum QueueStatus {
+  OPEN
+  CLOSED
+  PAUSED
+}
+
+model QueueEntry {
+  id            String   @id @default(uuid())
+  twitchUserId  String   @unique
+  twitchUsername String
+  position      Int
+  createdAt     DateTime @default(now())
+}
+
+model QueueState {
+  id     String      @id @default("singleton")
+  status QueueStatus @default(CLOSED)
 }
