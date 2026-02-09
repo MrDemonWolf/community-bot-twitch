@@ -223,6 +223,6 @@ docs/
 
 If you have any questions, suggestions, or feedback, feel free to reach out!
 
-- Discord: [Join our server](https://mrdwolf.com/discord)
+- Discord: [Join our server](https://mrdwolf.net/discord)
 
 Made with love by [MrDemonWolf, Inc.](https://www.mrdemonwolf.com)
