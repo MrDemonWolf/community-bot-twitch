@@ -1,6 +1,6 @@
 import { ChatClient, ChatMessage } from "@twurple/chat";
 
-import { TwitchResponseType } from "../generated/prisma";
+import { TwitchResponseType } from "../generated/prisma/client";
 import { getRandomChatter } from "./chatterTracker";
 
 async function substituteVariables(

@@ -1,5 +1,5 @@
 import { TwitchCommand } from "../types/command";
-import { QueueStatus } from "../generated/prisma";
+import { QueueStatus } from "../generated/prisma/client";
 import * as qm from "../services/queueManager";
 
 export const queue: TwitchCommand = {

@@ -1,7 +1,7 @@
 import consola from "consola";
 
 import { prisma } from "../database";
-import type { TwitchChatCommand } from "../generated/prisma";
+import type { TwitchChatCommand } from "../generated/prisma/client";
 
 export interface CachedCommand extends TwitchChatCommand {
   compiledRegex?: RegExp;

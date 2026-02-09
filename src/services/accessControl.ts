@@ -2,7 +2,7 @@ import { ChatMessage } from "@twurple/chat";
 import consola from "consola";
 
 import { prisma } from "../database";
-import { TwitchAccessLevel } from "../generated/prisma";
+import { TwitchAccessLevel } from "../generated/prisma/client";
 
 const ACCESS_HIERARCHY: Record<TwitchAccessLevel, number> = {
   EVERYONE: 0,

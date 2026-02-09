@@ -1,9 +1,9 @@
-import { Prisma } from "../generated/prisma";
+import { Prisma } from "../generated/prisma/client";
 import {
   TwitchAccessLevel,
   TwitchResponseType,
   TwitchStreamStatus,
-} from "../generated/prisma";
+} from "../generated/prisma/client";
 import { TwitchCommand } from "../types/command";
 import { prisma } from "../database";
 import { commandCache } from "../services/commandCache";

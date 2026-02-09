@@ -1,5 +1,5 @@
 import { prisma } from "../database";
-import { QueueStatus } from "../generated/prisma";
+import { QueueStatus } from "../generated/prisma/client";
 
 export async function getQueueStatus(): Promise<QueueStatus> {
   const state = await prisma.queueState.findUnique({

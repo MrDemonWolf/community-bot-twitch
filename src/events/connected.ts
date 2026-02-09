@@ -18,9 +18,14 @@ export function registerConnectionEvents(chatClient: ChatClient, channels: strin
     for (const channel of channels) {
       prisma.twitchChannel
         .upsert({
-          where: { twitchChannelId: channel },
+          where: {
+            twitchChannelId_guildId: {
+              twitchChannelId: channel,
+              guildId: "",
+            },
+          },
           update: {},
-          create: { twitchChannelId: channel },
+          create: { twitchChannelId: channel, guildId: "" },
         })
         .then(() => {
           consola.info({

@@ -14,7 +14,7 @@ import {
 import { executeCommand } from "../services/commandExecutor";
 import { trackMessage } from "../services/chatterTracker";
 import { isMuted } from "../services/botState";
-import { TwitchAccessLevel, TwitchStreamStatus } from "../generated/prisma";
+import { TwitchAccessLevel, TwitchStreamStatus } from "../generated/prisma/client";
 import * as commandLogger from "../utils/commandLogger";
 
 const COMMAND_PREFIX = "!";
