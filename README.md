@@ -109,20 +109,92 @@ On subsequent runs, the bot validates the stored token on startup. If the token 
 
 ### Built-in Commands
 
-These are hardcoded commands that always exist and bypass all checks:
+These are hardcoded commands that always exist:
 
-| Command | Description |
-|---------|-------------|
-| `!ping` | Replies with `@user Pong!` |
-| `!reloadcommands` | Reloads commands and regulars from the database (mod/broadcaster only) |
+| Command | Aliases | Access | Description |
+|---------|---------|--------|-------------|
+| `!ping` | — | Everyone | Replies with `@user Pong!` |
+| `!uptime` | — | Everyone | Shows stream uptime if live, or how long the stream has been offline |
+| `!accountage` | `!accage`, `!created` | Everyone | Shows when a Twitch account was created. Usage: `!accountage` or `!accountage @username` |
+| `!bot` | — | Broadcaster | Mute/unmute the bot. `!bot mute` silences all responses (except `!bot unmute`). `!bot unmute` re-enables responses |
+| `!queue` | — | Everyone (mod commands require mod+) | Viewer queue system (see [Queue System](#queue-system) below) |
+| `!filesay` | — | Broadcaster | Fetches a text file from a URL and sends each line to chat with a 1-second delay. Usage: `!filesay <url>` |
+| `!command` | — | Moderator+ | Manage database commands from chat (see [Managing Commands from Chat](#managing-commands-from-chat) below) |
+| `!reloadcommands` | — | Moderator+ | Reloads commands and regulars from the database immediately |
 
 To add new built-in commands, create a file in `src/commands/` and register it in `src/commands/index.ts`.
 
+### Queue System
+
+A full viewer queue with open/close/pause states. Viewers can join, leave, and check their position. Mods and broadcasters can manage the queue.
+
+**Viewer commands:**
+
+| Command | Description |
+|---------|-------------|
+| `!queue join` | Join the queue (must be open) |
+| `!queue leave` | Leave the queue |
+| `!queue position` | Check your position in the queue |
+| `!queue list` | View the first 10 entries + total count |
+
+**Mod/Broadcaster commands:**
+
+| Command | Description |
+|---------|-------------|
+| `!queue open` | Open the queue for joins |
+| `!queue close` | Close the queue |
+| `!queue pause` | Pause the queue (no new joins) |
+| `!queue unpause` | Resume the queue |
+| `!queue pick next` | Pick the next person in line |
+| `!queue pick random` | Pick a random person from the queue |
+| `!queue pick <username>` | Pick a specific person |
+| `!queue remove <username>` | Remove a user from the queue |
+| `!queue clear` | Clear all queue entries |
+
+### Managing Commands from Chat
+
+Mods and broadcasters can create and manage database commands directly from chat using `!command`:
+
+| Command | Description |
+|---------|-------------|
+| `!command add <name> <response>` | Create a new command |
+| `!command edit <name> <response>` | Update a command's response |
+| `!command remove <name>` | Delete a command |
+| `!command show <name>` | Display command details |
+| `!command options <name> [flags...]` | Modify command properties |
+
+**Flags for `!command options`:**
+
+| Flag | Description |
+|------|-------------|
+| `-cd <seconds>` | Set global cooldown |
+| `-usercd <seconds>` | Set per-user cooldown |
+| `-level <access_level>` | Set required access level |
+| `-type <say\|mention\|reply>` | Set response type |
+| `-enable` / `-disable` | Toggle enabled state |
+| `-hidden` / `-visible` | Toggle visibility |
+| `-stream <online\|offline\|both>` | Set stream status filter |
+| `-limituser <username\|clear>` | Restrict to a specific user |
+| `-alias add <name>` | Add an alias |
+| `-alias remove <name>` | Remove an alias |
+
+> **Note:** You cannot create a command with the same name as a built-in command.
+
 ### Database Commands
 
-The bot supports a full database-driven command system. Commands stored in the `TwitchChatCommand` table are loaded into memory on startup and can be managed without restarting the bot.
+The bot supports a full database-driven command system. Commands stored in the `TwitchChatCommand` table are loaded into memory on startup and can be managed without restarting the bot — either from chat via `!command` or through Prisma Studio.
 
-#### Adding Commands
+### Command Execution Pipeline
+
+When a message arrives in chat, it goes through a 3-phase pipeline. The first match wins:
+
+1. **Phase 1: Built-in commands** — Checks the `!` prefix against hardcoded commands. Always runs (except when muted, only `!bot unmute` is allowed).
+2. **Phase 2: Database prefix commands** — Looks up the `!` prefix in the command cache (by name or alias). Checks access level, cooldowns, stream status, keywords, and limitToUser.
+3. **Phase 3: Database regex commands** — Tests the full message against compiled regex patterns. Same checks as Phase 2.
+
+### Database Commands
+
+#### Adding Commands via Prisma Studio
 
 Use Prisma Studio to manage commands through a GUI:
 
@@ -160,11 +232,16 @@ Or insert directly into the database. Here's what each field does:
 
 Use these placeholders in the `response` field:
 
-| Variable | Replaced With |
-|----------|---------------|
-| `{user}` | The username of the person who triggered the command |
-| `{channel}` | The channel name where the command was used |
-| `{args}` | Everything the user typed after the command name |
+| Variable | Replaced With | Example |
+|----------|---------------|---------|
+| `{user}` | Username of the person who triggered the command | `Hey {user}!` → `Hey coolviewer!` |
+| `{channel}` | Channel name where the command was used | `Welcome to {channel}!` → `Welcome to mrdemonwolf!` |
+| `{args}` | Everything the user typed after the command name | `!cmd hello world` → `{args}` = `hello world` |
+| `${1}`, `${2}`, etc. | Positional argument (1-indexed) | `!cmd foo bar` → `${1}` = `foo`, `${2}` = `bar` |
+| `${1\|fallback}` | Positional argument with a default fallback | `${1\|@mrdemonwolf}` → uses `@mrdemonwolf` if no arg given |
+| `${random.pick '...' '...'}` | Random choice from a quoted list | `${random.pick 'hi' 'hello' 'hey'}` → one at random |
+| `${random.chatter}` | A random active user currently in the channel | `Shoutout to ${random.chatter}!` |
+| `${time <timezone>}` | Current time in the given timezone | `${time America/Chicago}` → `3:45:00 PM` |
 
 **Example:** A command with response `Hey {user}, welcome to {channel}!` and type `SAY` would output: `Hey coolviewer, welcome to mrdemonwolf!`
 
@@ -225,6 +302,21 @@ Commands and regulars are automatically reloaded from the database every 60 seco
 
 ---
 
+## Prisma Schema Sync
+
+**Do NOT edit `prisma/schema.prisma` directly.** The source of truth for all Prisma models is the monorepo at `../community-bot/packages/db/prisma/schema/`.
+
+To sync after schema changes in the monorepo:
+
+```bash
+pnpm prisma:sync    # Pull models from monorepo → prisma/schema.prisma
+pnpm db:generate    # Regenerate the Prisma client
+```
+
+To add or modify models, edit the `.prisma` files in `../community-bot/packages/db/prisma/schema/`, then run the commands above.
+
+---
+
 ## Common Commands
 
 ```bash
@@ -239,6 +331,9 @@ pnpm start
 
 # Lint
 pnpm lint
+
+# Schema sync
+pnpm prisma:sync    # Sync schema from monorepo (../community-bot)
 
 # Database
 pnpm db:generate    # Regenerate Prisma Client after schema changes
@@ -271,21 +366,31 @@ src/
     routes/status.ts        # GET /status endpoint
   commands/
     index.ts                # Built-in command registry
-    ping.ts                 # !ping command
-    reloadCommands.ts       # !reloadcommands command
+    ping.ts                 # !ping → @user Pong!
+    uptime.ts               # !uptime → stream uptime or offline duration
+    accountage.ts           # !accountage → Twitch account creation date
+    bot.ts                  # !bot mute/unmute → mute/unmute the bot
+    queue.ts                # !queue → viewer queue system
+    filesay.ts              # !filesay <url> → read file lines to chat
+    command.ts              # !command add/edit/remove/show/options → manage DB commands
+    reloadCommands.ts       # !reloadcommands → reload commands + regulars from DB
   database/
     index.ts                # Prisma client singleton
   events/
-    connected.ts            # Auth, connect, disconnect handlers
+    connected.ts            # Auth success/failure, connect/disconnect handlers
     message.ts              # 3-phase command pipeline (built-in → DB prefix → DB regex)
-    join.ts                 # User join logging
-    part.ts                 # User part logging
+    join.ts                 # User join/join-failure logging + chatter tracking
+    part.ts                 # User part logging + chatter tracking
   services/
-    commandCache.ts         # Loads DB commands into memory, O(1) prefix + regex lookup
-    cooldownManager.ts      # In-memory global and per-user cooldown tracking
+    commandCache.ts         # Loads DB commands into memory with prefix map + regex array
     accessControl.ts        # Access level hierarchy + regulars cache
+    cooldownManager.ts      # In-memory global and per-user cooldown tracking
+    commandExecutor.ts      # Variable substitution + SAY/MENTION/REPLY dispatch
     streamStatusManager.ts  # Twitch Helix stream polling (live/offline + title)
-    commandExecutor.ts      # Response variable substitution + SAY/MENTION/REPLY dispatch
+    queueManager.ts         # Viewer queue (join/leave/pick/open/close/pause)
+    helixClient.ts          # Generic Twitch Helix API wrapper
+    botState.ts             # In-memory bot mute state
+    chatterTracker.ts       # Per-channel active chatter tracking
   twitch/
     auth.ts                 # RefreshingAuthProvider with DB persistence
     chat.ts                 # ChatClient factory
