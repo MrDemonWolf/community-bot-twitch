@@ -97,6 +97,12 @@ Schema in `prisma/schema.prisma` with models:
 
 **Seed data:** `prisma/commands.json` contains legacy commands for import via `pnpm db:import`. No seed.js — the import script is at `src/scripts/importCommands.ts`.
 
+**Documentation:**
+- `README.md` — Project overview, features, usage, and development setup (FluffBoost layout)
+- `COMMANDS.md` — Detailed reference for all 8 built-in commands with examples
+- `docs/DATABASE_COMMANDS.md` — Full database command system docs (fields, variables, access levels, regex, cooldowns, stream filtering)
+- `NOTES.md` — Migration notes and variable reference from the old bot
+
 **Infrastructure:** `docker-compose.yml` provides PostgreSQL 16 (port 5432) and Redis 7.2 (port 6379).
 
 ## Environment Variables
