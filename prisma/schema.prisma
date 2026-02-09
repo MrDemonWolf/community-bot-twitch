@@ -5,30 +5,62 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider   = "prisma-client"
+  engineType = "client"
+  output     = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
+
+// --- discord.prisma ---
 
 model DiscordGuild {
-  id            String          @id @default(uuid())
-  guildId       String          @unique
-  joinedAt      DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  TwitchChannel TwitchChannel[]
+  id                    String              @id @default(uuid())
+  guildId               String              @unique
+  notificationChannelId String?
+  notificationRoleId    String?
+  joinedAt              DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  TwitchChannel         TwitchChannel[]
+  TwitchNotification    TwitchNotification[]
 }
 
+
+// --- twitch.prisma ---
+
 model TwitchChannel {
+  id                 String              @id @default(uuid())
+  twitchChannelId    String
+  username           String?
+  displayName        String?
+  profileImageUrl    String?
+  isLive             Boolean             @default(false)
+  lastStreamTitle    String?
+  lastGameName       String?
+  lastStartedAt      DateTime?
+  DiscordGuild       DiscordGuild?       @relation(fields: [guildId], references: [id])
+  guildId            String?
+  TwitchNotification TwitchNotification[]
+  joinedAt           DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  @@unique([twitchChannelId, guildId])
+}
+
+model TwitchNotification {
   id              String        @id @default(uuid())
-  twitchChannelId String        @unique
-  DiscordGuild    DiscordGuild? @relation(fields: [guildId], references: [id])
-  guildId         String?
-  joinedAt        DateTime      @default(now())
+  messageId       String
+  channelId       String
+  guildId         String
+  twitchChannelId String
+  isLive          Boolean       @default(true)
+  streamStartedAt DateTime?
+  createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
+  DiscordGuild    DiscordGuild? @relation(fields: [guildId], references: [guildId])
+  TwitchChannel   TwitchChannel? @relation(fields: [twitchChannelId], references: [id])
 }
 
 model TwitchCredential {
@@ -92,6 +124,9 @@ model TwitchRegular {
   updatedAt      DateTime @updatedAt
 }
 
+
+// --- queue.prisma ---
+
 enum QueueStatus {
   OPEN
   CLOSED
@@ -110,3 +145,4 @@ model QueueState {
   id     String      @id @default("singleton")
   status QueueStatus @default(CLOSED)
 }
+

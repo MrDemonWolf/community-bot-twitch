@@ -29,5 +29,5 @@
   },
   "files": ["src/app.ts"], // Entry point
   "include": ["**/*.ts"], // Include all TypeScript files in the project
-  "exclude": ["node_modules", "dist", "prisma"] // Exclude unnecessary files
+  "exclude": ["node_modules", "dist", "prisma", "prisma.config.ts"] // Exclude unnecessary files
 }
